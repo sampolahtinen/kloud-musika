@@ -1,0 +1,17 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "CreateField",
+      "model": "Track",
+      "field": "metadata",
+      "type": "TrackMetadata",
+      "arity": "Optional"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "Track",
+      "field": "trackMetadata"
+    }
+  ]
+}

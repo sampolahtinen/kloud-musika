@@ -1,0 +1,55 @@
+{
+  "name": "typescript-graphql",
+  "scripts": {
+    "start": "node dist/server",
+    "clean": "rm -rf dist",
+    "build": "npm -s run clean && npm -s run generate && tsc",
+    "generate": "npm -s run generate:prisma && npm -s run generate:nexus",
+    "generate:prisma": "prisma2 generate",
+    "generate:nexus": "ts-node --transpile-only src/schema",
+    "migrate:save": "prisma2 migrate save --experimental",
+    "migrate:up": "prisma2 migrate up --experimental",
+    "postinstall": "npm -s run generate",
+    "dev": "ts-node-dev --no-notify --respawn --transpileOnly src/server"
+  },
+  "dependencies": {
+    "@koa/cors": "2",
+    "@prisma/client": "2.0.0-preview024",
+    "@types/isomorphic-fetch": "^0.0.35",
+    "@types/koa-router": "^7.4.0",
+    "@types/node-fetch": "^2.5.5",
+    "@types/websocket": "^1.0.0",
+    "apollo-server": "2.11.0",
+    "apollo-server-koa": "^2.11.0",
+    "dropbox": "^4.0.30",
+    "es6-promise": "^4.2.8",
+    "googleapis": "39",
+    "graphql": "14.6.0",
+    "graphql-tag": "^2.10.3",
+    "isomorphic-fetch": "^2.2.1",
+    "koa-router": "^8.0.8",
+    "nexus": "0.12.0-rc.13",
+    "nexus-prisma": "0.11.1",
+    "prettier": "^1.19.1",
+    "tslint": "^6.1.0",
+    "tslint-eslint-rules": "^5.4.0",
+    "websocket": "^1.0.31"
+  },
+  "devDependencies": {
+    "@types/node": "12.12.30",
+    "chalk": "^4.0.0",
+    "prisma2": "2.0.0-preview024",
+    "ts-node": "8.7.0",
+    "ts-node-dev": "1.0.0-pre.44",
+    "typescript": "3.8.3"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "semi": false,
+    "trailingComma": "all"
+  },
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "type": "module"
+}

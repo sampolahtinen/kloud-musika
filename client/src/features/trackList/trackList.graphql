@@ -1,0 +1,10 @@
+query {
+  tracks {
+    id
+    title
+    artist {
+      id
+      name
+    }
+  }
+}
