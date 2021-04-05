@@ -26,7 +26,7 @@ export function parseTrack(track: string) {
 }
 
 export async function trackExists(fileId: string) {
-  return await prisma.track.findOne({ where: { fileId } })
+  return await prisma.track.findUnique({ where: { fileId } })
 }
 
 async function importArtists(artists: any) {
@@ -61,11 +61,11 @@ export async function importTracks(tracks: ImportTracksInput) {
     const artistTrackTuple = parseTrack(track.name ? track.name : '')
     const { path_lower } = track
     try {
-      const artist = await prisma.artist.findOne({
+      const artist = await prisma.artist.findUnique({
         where: { name: artistTrackTuple[0] },
       })
 
-      let importedTrack = await prisma.track.findOne({
+      let importedTrack = await prisma.track.findUnique({
         where: { fileId: track.id },
       })
 

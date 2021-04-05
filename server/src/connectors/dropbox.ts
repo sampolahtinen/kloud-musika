@@ -1,10 +1,12 @@
+import dotenv from 'dotenv'
 import dropbox from 'dropbox'
 import fetch from 'isomorphic-fetch'
 import { importTracks } from '../tools/importTracks'
 import chalk from 'chalk'
-
+dotenv.config()
 const MUSIC_COLLECTION_PATH = '/music_collection'
 
+console.log(process.env)
 export const dbx = new dropbox.Dropbox({
   fetch,
   accessToken: process.env.DROPBOX_ACCESS_TOKEN,
@@ -72,33 +74,34 @@ async function syncDropboxTracks() {
     await importTracks(cleaned as dropbox.files.FileMetadataReference[])
 
     console.log('First import done')
+    console.log(cleaned)
     // debugCounter < 5
-    while (hasMore) {
-      console.log('Looping through cursors')
-      const {
-        entries: moreTracks,
-        has_more,
-        cursor: nextCursor,
-      } = await getFolderFilesContinue(cursor)
+    // while (hasMore) {
+    //   console.log('Looping through cursors')
+    //   const {
+    //     entries: moreTracks,
+    //     has_more,
+    //     cursor: nextCursor,
+    //   } = await getFolderFilesContinue(cursor)
 
-      cursor = nextCursor
-      hasMore = has_more
+    //   cursor = nextCursor
+    //   hasMore = has_more
 
-      const cleanedArray = moreTracks.filter(track =>
-        isAudioFile(track.name),
-      ) as dropbox.files.FileMetadataReference[]
+    //   const cleanedArray = moreTracks.filter(track =>
+    //     isAudioFile(track.name),
+    //   ) as dropbox.files.FileMetadataReference[]
 
-      debugCounter = debugCounter + tracks.length
-      // debugCounter++
-      console.log(chalk.yellow(debugCounter))
-      await wait(1000 * 60)
-      await importTracks(cleanedArray)
-    }
+    //   debugCounter = debugCounter + tracks.length
+    //   // debugCounter++
+    //   console.log(chalk.yellow(debugCounter))
+    //   await wait(1000 * 60)
+    //   await importTracks(cleanedArray)
+    // }
 
     return debugCounter
   } catch (error) {
     console.log(chalk.red('Error from syncDropboxTracks function'))
-    console.log(chalk.red(error))
+    console.log(chalk.red(JSON.stringify(error)))
     throw new Error(error)
   }
 }
