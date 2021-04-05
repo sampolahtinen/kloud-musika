@@ -3,7 +3,7 @@ import './App.css';
 import TrackList from '../features/trackList/TrackList';
 import { GlobalStyle } from '../styles/globalStyle';
 import Layout from '../components/Layout/Layout';
-import AudioPlayer from '../features/audioPlayer/AudioPlayer.jsx';
+import AudioPlayer from '../features/audioPlayer/AudioPlayer';
 import { useState } from 'react';
 
 function App() {

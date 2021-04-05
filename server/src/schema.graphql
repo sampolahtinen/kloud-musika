@@ -52,6 +52,7 @@ type Mutation {
   createOneTrack(data: TrackCreateInput!): Track!
   createOneTrackMetadata(data: TrackMetadataCreateInput!): TrackMetadata!
   createOneUser(data: UserCreateInput!): User!
+  generateDirectMediaLink(trackId: String!): TrackMetadata
 }
 
 input NestedStringFilter {

@@ -13,7 +13,7 @@ export const schema = makeSchema({
     Artist,
     TrackMetadata,
     Query,
-    Mutation
+    Mutation,
   ],
   plugins: [
     nexusPrisma({

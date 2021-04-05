@@ -284,6 +284,7 @@ export interface NexusGenFieldTypes {
     createOneTrack: NexusGenRootTypes['Track']; // Track!
     createOneTrackMetadata: NexusGenRootTypes['TrackMetadata']; // TrackMetadata!
     createOneUser: NexusGenRootTypes['User']; // User!
+    generateDirectMediaLink: NexusGenRootTypes['TrackMetadata'] | null; // TrackMetadata
   }
   Query: { // field return type
     artists: NexusGenRootTypes['Artist'][]; // [Artist!]!
@@ -322,6 +323,7 @@ export interface NexusGenFieldTypeNames {
     createOneTrack: 'Track'
     createOneTrackMetadata: 'TrackMetadata'
     createOneUser: 'User'
+    generateDirectMediaLink: 'TrackMetadata'
   }
   Query: { // field return type name
     artists: 'Artist'
@@ -362,6 +364,9 @@ export interface NexusGenArgTypes {
     }
     createOneUser: { // args
       data: NexusGenInputs['UserCreateInput']; // UserCreateInput!
+    }
+    generateDirectMediaLink: { // args
+      trackId: string; // String!
     }
   }
   Query: {
