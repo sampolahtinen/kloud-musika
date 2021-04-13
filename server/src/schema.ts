@@ -1,19 +1,25 @@
 import { nexusPrisma } from 'nexus-plugin-prisma'
 import { makeSchema } from 'nexus'
 import * as path from 'path'
-import { Artist, Track, TrackMetadata, User } from './graphql'
-import { Query } from './graphql/query'
-import { Mutation } from './graphql/mutation'
-
+import {
+  Artist,
+  CloudSyncMetadata,
+  Mutation,
+  Query,
+  Track,
+  TrackMetadata,
+  User,
+} from './graphql'
 
 export const schema = makeSchema({
   types: [
-    User, 
-    Track, 
+    User,
+    Track,
     Artist,
     TrackMetadata,
     Query,
     Mutation,
+    CloudSyncMetadata,
   ],
   plugins: [
     nexusPrisma({

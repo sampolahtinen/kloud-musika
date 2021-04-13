@@ -8,7 +8,7 @@
     "declaration": false,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
-    "noImplicitReturns": true,
+    "noImplicitReturns": false,
     "noImplicitThis": true,
     "noImplicitUseStrict": true,
     "noUnusedLocals": false,

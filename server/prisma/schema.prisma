@@ -14,6 +14,22 @@ model User {
   name  String?
 }
 
+enum SyncStatus {
+  OK
+  ERROR
+}
+
+model CloudSyncMetadata {
+  id                 String     @id @default(cuid())
+  // Describes which cursor was last used when importing. For traceability purposes.
+  lastImportedCursor String
+  // Dropbox allows creawting of latest cursor, which you can use for tracking new changes in folder
+  latestCursor       String?
+  createdAt          DateTime   @default(now())
+  importFileCount    Int
+  status             SyncStatus
+}
+
 model TrackMetadata {
   id                 String @id @default(cuid())
   original_file_path String

@@ -244,6 +244,9 @@ export interface NexusGenObjects {
     id: string; // String!
     name: string; // String!
   }
+  CloudSyncMetadata: { // root type
+    id: string; // String!
+  }
   Mutation: {};
   Query: {};
   Track: { // root type
@@ -278,6 +281,9 @@ export interface NexusGenFieldTypes {
     country: string | null; // String
     id: string; // String!
     name: string; // String!
+  }
+  CloudSyncMetadata: { // field return type
+    id: string; // String!
   }
   Mutation: { // field return type
     createOneArtist: NexusGenRootTypes['Artist']; // Artist!
@@ -317,6 +323,9 @@ export interface NexusGenFieldTypeNames {
     country: 'String'
     id: 'String'
     name: 'String'
+  }
+  CloudSyncMetadata: { // field return type name
+    id: 'String'
   }
   Mutation: { // field return type name
     createOneArtist: 'Artist'

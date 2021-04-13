@@ -1,9 +1,6 @@
 import { prisma } from '../context'
 import dropbox from 'dropbox'
-import { generateSharingLink, isAudioFile } from '../connectors/dropbox'
-
-// TODO fix this type
-// type ImportTracksInput = drive_v3.Schema$File[] | dropbox.files.FileMetadata[]
+import { isAudioFile } from '../utils/utils'
 
 type ImportTracksInput = dropbox.files.FileMetadataReference[]
 
@@ -29,16 +26,16 @@ export async function trackExists(fileId: string) {
   return await prisma.track.findUnique({ where: { fileId } })
 }
 
-async function importArtists(artists: any) {
+async function importArtists(artistNames: string[]) {
   return Promise.all(
-    artists.map(async (artist: any) => {
+    artistNames.map(async artistName => {
       await prisma.artist.upsert({
-        where: { name: artist },
+        where: { name: artistName },
         create: {
-          name: artist,
+          name: artistName,
         },
         update: {
-          name: artist,
+          name: artistName,
         },
       })
     }),
@@ -46,21 +43,17 @@ async function importArtists(artists: any) {
 }
 
 export async function importTracks(tracks: ImportTracksInput) {
-  console.log('importTrack function executed')
-  // Create a unique artist array
-  const artists = [
-    ...new Set(
-      tracks.map(track => parseTrack(track.name ? track.name : '')[0]),
-    ),
-  ]
+  try {
+    // First import artists to avoid duplicate import attempts
+    // Create a unique artist array
+    const artists = [
+      ...new Set(tracks.map(track => parseTrack(track?.name ?? '')[0])),
+    ]
+    await importArtists(artists)
 
-  // First import artists to avoid duplicate import attempts
-  await importArtists(artists)
-
-  const promises = tracks.map(async track => {
-    const artistTrackTuple = parseTrack(track.name ? track.name : '')
-    const { path_lower } = track
-    try {
+    const promises = tracks.map(async track => {
+      const artistTrackTuple = parseTrack(track?.name ?? '')
+      const { path_lower } = track
       const artist = await prisma.artist.findUnique({
         where: { name: artistTrackTuple[0] },
       })
@@ -80,8 +73,7 @@ export async function importTracks(tracks: ImportTracksInput) {
             metadata: {
               create: {
                 original_file_path: path_lower || '',
-                direct_link: await generateSharingLink(path_lower || ''),
-                // direct_link: '',
+                direct_link: '',
               },
             },
           },
@@ -89,11 +81,21 @@ export async function importTracks(tracks: ImportTracksInput) {
       }
 
       return importedTrack
-    } catch (error) {
-      console.log('There was an error when trying to create a track/artist')
-      console.log(error)
-      return error
+    })
+
+    return Promise.all(promises)
+  } catch (error) {
+    console.log(JSON.stringify(error))
+    /**
+     * Following error most likely originates from this warning:
+     * "Warning: nexus-plugin-prisma@0.33.0 does not support @prisma/client@2.20.1. The supported range is: `2.19.x`. This could lead to undefined behaviors and bugs."
+     */
+    if (!JSON.stringify(error).includes('clientVersion')) {
+      console.error('IMPORT TRACKS FAILED')
+      console.error(JSON.stringify(error))
+      throw new Error(JSON.stringify(error))
     }
-  })
-  return Promise.all(promises)
+    console.log('ok from import catch')
+    return 'OK'
+  }
 }

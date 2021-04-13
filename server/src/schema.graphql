@@ -47,6 +47,10 @@ input ArtistWhereUniqueInput {
   name: String
 }
 
+type CloudSyncMetadata {
+  id: String!
+}
+
 type Mutation {
   createOneArtist(data: ArtistCreateInput!): Artist!
   createOneTrack(data: TrackCreateInput!): Track!
