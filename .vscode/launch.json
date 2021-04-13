@@ -13,17 +13,14 @@
       "console": "integratedTerminal"
     },
     {
-      "name": "ts-node",
+      "name": "Current TS File",
       "type": "node",
       "request": "launch",
-      "runtimeExecutable": "node",
-      "runtimeArgs": ["--nolazy", "-r", "ts-node"],
-
-      "args": ["./src/connectors/syncDropboxTask.ts"],
-      
-      "cwd": "${workspaceRoot}",
-      "internalConsoleOptions": "openOnSessionStart",
-      "skipFiles": ["<node_internals>/**", "node_modules/**"]
-    }
+      "args": ["${file}"],
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
+      "sourceMaps": true,
+      "cwd": "${workspaceRoot}/server",
+      "protocol": "inspector",
+  }
   ]
 }

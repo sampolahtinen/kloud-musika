@@ -12,13 +12,29 @@ export function parseTrack(track: string) {
   }
 
   const trackInformation = track
-    .split('-')
+    .split(' - ')
     .map(s => s.trim().replace('.mp3', ''))
+  // console.log(trackInformation)
 
-  if (trackInformation.length === 3) {
-    return [trackInformation[0], trackInformation[2]]
-  } else {
-    return [trackInformation[0], trackInformation[1]]
+  switch (trackInformation.length) {
+    // Meaning artist name and track title is null
+    case 0:
+      return ['', '']
+    // Not able to parse artist name, put everything into track title
+    case 1:
+      return ['', trackInformation[0]]
+    // Normal case. Return [Artist name, track title] tuple
+    case 2:
+      return [trackInformation[0], trackInformation[1]]
+    // If album information is between Artist name and Track title, skip it.
+    case 3:
+      return [trackInformation[0], trackInformation[2]]
+    // What ever was parsed, take the first which is dmost often Artist and the last that is the Track title
+    default:
+      return [
+        trackInformation[0],
+        trackInformation[trackInformation.length - 1],
+      ]
   }
 }
 
@@ -28,8 +44,8 @@ export async function trackExists(fileId: string) {
 
 async function importArtists(artistNames: string[]) {
   return Promise.all(
-    artistNames.map(async artistName => {
-      await prisma.artist.upsert({
+    artistNames.map(artistName =>
+      prisma.artist.upsert({
         where: { name: artistName },
         create: {
           name: artistName,
@@ -37,8 +53,8 @@ async function importArtists(artistNames: string[]) {
         update: {
           name: artistName,
         },
-      })
-    }),
+      }),
+    ),
   )
 }
 
@@ -49,7 +65,12 @@ export async function importTracks(tracks: ImportTracksInput) {
     const artists = [
       ...new Set(tracks.map(track => parseTrack(track?.name ?? '')[0])),
     ]
-    await importArtists(artists)
+
+    try {
+      await importArtists(artists)
+    } catch (error) {
+      console.log(JSON.stringify(error))
+    }
 
     const promises = tracks.map(async track => {
       const artistTrackTuple = parseTrack(track?.name ?? '')
